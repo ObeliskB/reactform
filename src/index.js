@@ -13,37 +13,43 @@ function BootstrapForm() {
   const [item, setItem] = useState(1);
   const [data, setData] = useState("");
   const textUsername = useRef();
+  const textEmail = useRef();
   const selectItem = useRef();
 
   function isValidEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
   }
 
-  const checkEmail = (e) => {
-    if (!isValidEmail(e.target.value)) {
+  function checkEmail() {
+    if (!isValidEmail(textEmail.current.value)) {
       setEmailError("อีเมล์ไม่ถูกต้อง");
+      return false;
     } else {
       setEmailError("");
-      setEmail(e.target.value);
+      setEmail(textEmail.current.value);
+      return true;
     }
-  };
+  }
 
-  const checkUsername = () => {
+  function checkUsername() {
     if (textUsername.current.value.length >= 4) {
       setUsername(textUsername.current.value);
       setUsernameError("");
+      return true;
     } else {
       setUsernameError("username  ต้องมีความยาว 4 ตัวอักษรขึ้นไป");
       setUsername("");
+      return false;
     }
-  };
+  }
 
   const checkItem = () => {
     setItem(selectItem.current.value);
   };
 
   const submitData = () => {
-    setData(username + " " + email + " " + item);
+    if (checkUsername() && checkEmail())
+      setData(username + " " + email + " " + item);
   };
 
   return (
@@ -78,6 +84,7 @@ function BootstrapForm() {
         type="email"
         id="email"
         placeholder="your e-mail eg: someone@gmail.com"
+        ref={textEmail}
         className="form-control"
         onBlur={checkEmail}
       ></input>
